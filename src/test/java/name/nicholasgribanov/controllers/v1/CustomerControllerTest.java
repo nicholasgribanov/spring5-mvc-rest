@@ -19,10 +19,11 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CustomerControllerTest {
+public class CustomerControllerTest extends AbstractRestControllerTest {
     private final String FIRST_NAME = "Nikolay";
     private final String LAST_NAME = "Gribanov";
     private final String URL = "/customers/nikolya";
@@ -72,5 +73,26 @@ public class CustomerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
 
+    }
+
+    @Test
+    public void createNewCustomer() throws Exception {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setFirstName("Kostia");
+        customerDTO.setLastName("Vaschenko");
+
+        CustomerDTO customerDTOReturned = new CustomerDTO();
+        customerDTOReturned.setFirstName(customerDTO.getFirstName());
+        customerDTOReturned.setLastName(customerDTO.getLastName());
+        customerDTOReturned.setCustomerUrl("/api/v1/customers/1");
+
+        when(customerService.createNewCustomer(customerDTO)).thenReturn(customerDTOReturned);
+
+        mockMvc.perform(post("/api/v1/customers/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.firstName", equalTo("Kostia")))
+                .andExpect(jsonPath("$.customer_url", equalTo("/api/v1/customers/1")));
     }
 }
