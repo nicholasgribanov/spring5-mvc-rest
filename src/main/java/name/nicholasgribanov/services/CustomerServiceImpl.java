@@ -2,6 +2,7 @@ package name.nicholasgribanov.services;
 
 import name.nicholasgribanov.api.v1.mapper.CustomerMapper;
 import name.nicholasgribanov.api.v1.model.CustomerDTO;
+import name.nicholasgribanov.controllers.v1.CustomerController;
 import name.nicholasgribanov.domain.Customer;
 import name.nicholasgribanov.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,11 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerDTO> getAllCustomers() {
         return customerRepository.findAll()
                 .stream()
-                .map(customerMapper::customerToCustomerDTO)
+                .map(customer -> {
+                    CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
+                    customerDTO.setCustomerUrl(getCustomerUrl(customer.getId()));
+                    return customerDTO;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -42,7 +47,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerDTO returnDto = customerMapper.customerToCustomerDTO(savedCustomer);
 
-        returnDto.setCustomerUrl("/api/v1/customer/" + savedCustomer.getId());
+        returnDto.setCustomerUrl(getCustomerUrl(savedCustomer.getId()));
 
         return returnDto;
     }
@@ -65,12 +70,20 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setLastName(customerDTO.getLastName());
             }
 
-            return customerMapper.customerToCustomerDTO(customer);
+            CustomerDTO returnedDTO = customerMapper.customerToCustomerDTO(customer);
+
+            returnedDTO.setCustomerUrl(getCustomerUrl(id));
+
+            return returnedDTO;
         }).orElseThrow(RuntimeException::new);
     }
 
     @Override
     public void deleteCustomerById(Long id) {
         customerRepository.deleteById(id);
+    }
+
+    private String getCustomerUrl(Long id) {
+        return CustomerController.BASE_URL + "/id" + id;
     }
 }
