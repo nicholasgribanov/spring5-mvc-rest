@@ -2,7 +2,6 @@ package name.nicholasgribanov.controllers.v1;
 
 import name.nicholasgribanov.api.v1.model.CustomerDTO;
 import name.nicholasgribanov.api.v1.model.CustomerListDTO;
-import name.nicholasgribanov.domain.Customer;
 import name.nicholasgribanov.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +45,12 @@ public class CustomerController {
     public ResponseEntity<CustomerDTO> patchCustomer(@PathVariable Long id, @RequestBody CustomerDTO customerDTO) {
         return new ResponseEntity<CustomerDTO>(
                 customerService.patchCustomer(id, customerDTO), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomerById(@PathVariable Long id) {
+        customerService.deleteCustomerById(id);
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }

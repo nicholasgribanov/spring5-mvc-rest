@@ -132,10 +132,17 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
         when(customerService.patchCustomer(anyLong(), any(CustomerDTO.class))).thenReturn(customerDTOReturned);
 
         mockMvc.perform(patch("/api/v1/customers/1")
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(asJsonString(customerDTO)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(customerDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo("Kostia")))
                 .andExpect(jsonPath("$.lastName", equalTo("Varlamov")));
+    }
+
+    @Test
+    public void deleteCustomer() throws Exception {
+        mockMvc.perform(delete("/api/v1/customers/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }
