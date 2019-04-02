@@ -1,7 +1,9 @@
 package name.nicholasgribanov.controllers.v1;
 
 import name.nicholasgribanov.api.v1.model.CustomerDTO;
+import name.nicholasgribanov.controllers.RestResponseEntityExceptionHandler;
 import name.nicholasgribanov.services.CustomerService;
+import name.nicholasgribanov.services.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -40,7 +42,9 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(customerController)
+                .setControllerAdvice(new RestResponseEntityExceptionHandler())
+                .build();
     }
 
     @Test
@@ -64,7 +68,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.customers", hasSize(2)));
     }
 
-    @Test
+   /* @Test
     public void getCustomerByFirstName() throws Exception {
         CustomerDTO customerDTO = new CustomerDTO(FIRST_NAME, LAST_NAME, URL);
 
@@ -74,7 +78,7 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)));
 
-    }
+    }*/
 
     @Test
     public void createNewCustomer() throws Exception {
@@ -144,5 +148,14 @@ public class CustomerControllerTest extends AbstractRestControllerTest {
         mockMvc.perform(delete("/api/v1/customers/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void notFoundException() throws Exception {
+        when(customerService.findCustomerById(anyLong())).thenThrow(ResourceNotFoundException.class);
+
+        mockMvc.perform(get(CustomerController.BASE_URL + "/222")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }

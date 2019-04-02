@@ -25,10 +25,17 @@ public class CustomerController {
                 new CustomerListDTO(customerService.getAllCustomers()), HttpStatus.OK);
     }
 
-    @GetMapping("/{name}")
+    //TODO Implement get mapping for name and id
+   /* @GetMapping("/{name}")
     public ResponseEntity<CustomerDTO> getCustomerByFirstName(@PathVariable String name) {
         return new ResponseEntity<CustomerDTO>(
                 customerService.getCustomerByName(name), HttpStatus.OK);
+    }*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDTO> getCustomerByFirstName(@PathVariable Long id) {
+        return new ResponseEntity<CustomerDTO>(
+                customerService.findCustomerById(id), HttpStatus.OK);
     }
 
     @PostMapping

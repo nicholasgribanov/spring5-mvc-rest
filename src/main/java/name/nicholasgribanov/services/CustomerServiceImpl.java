@@ -75,7 +75,7 @@ public class CustomerServiceImpl implements CustomerService {
             returnedDTO.setCustomerUrl(getCustomerUrl(id));
 
             return returnedDTO;
-        }).orElseThrow(RuntimeException::new);
+        }).orElseThrow(ResourceNotFoundException::new);
     }
 
     @Override
@@ -85,5 +85,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     private String getCustomerUrl(Long id) {
         return CustomerController.BASE_URL + "/id" + id;
+    }
+
+    @Override
+    public CustomerDTO findCustomerById(Long id) {
+        return customerRepository.findById(id)
+                .map(customerMapper::customerToCustomerDTO)
+                .map(customerDTO -> {
+                    customerDTO.setCustomerUrl(getCustomerUrl(id));
+                    return customerDTO;
+
+                }).orElseThrow(ResourceNotFoundException::new);
     }
 }
