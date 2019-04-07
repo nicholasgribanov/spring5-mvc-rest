@@ -1,7 +1,6 @@
 package name.nicholasgribanov.services;
 
 import name.nicholasgribanov.api.v1.model.CustomerDTO;
-import name.nicholasgribanov.domain.Customer;
 
 import java.util.List;
 
