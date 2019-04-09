@@ -1,11 +1,14 @@
 package name.nicholasgribanov.controllers.v1;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import name.nicholasgribanov.api.v1.model.VendorDTO;
 import name.nicholasgribanov.api.v1.model.VendorListDTO;
 import name.nicholasgribanov.services.VendorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Api(value = "This Vendor Controller API")
 @RestController
 @RequestMapping(VendorController.BASE_URL)
 public class VendorController {
@@ -17,6 +20,7 @@ public class VendorController {
         this.vendorService = vendorService;
     }
 
+    @ApiOperation(value = "This will get list of all Vendors", notes = "Implementation just")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public VendorListDTO getAllVendors() {
