@@ -1,11 +1,14 @@
 package name.nicholasgribanov.controllers.v1;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import name.nicholasgribanov.api.v1.model.CustomerDTO;
 import name.nicholasgribanov.api.v1.model.CustomerListDTO;
 import name.nicholasgribanov.services.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@Api(description = "This is my customer Controller")
 @RestController
 @RequestMapping(CustomerController.BASE_URL)
 public class CustomerController {
@@ -17,6 +20,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
+    @ApiOperation(value = "This will get list of customers", notes = "These are some implementation")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public CustomerListDTO getAllCustomers() {
