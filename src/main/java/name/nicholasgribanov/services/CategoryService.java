@@ -8,4 +8,6 @@ public interface CategoryService {
     List<CategoryDTO> getAllCategories();
 
     CategoryDTO getCategoryByName(String name);
+
+    CategoryDTO createNewCategory(CategoryDTO categoryDTO);
 }

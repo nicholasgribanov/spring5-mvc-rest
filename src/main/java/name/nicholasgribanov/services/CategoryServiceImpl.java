@@ -2,6 +2,7 @@ package name.nicholasgribanov.services;
 
 import name.nicholasgribanov.api.v1.mapper.CategoryMapper;
 import name.nicholasgribanov.api.v1.model.CategoryDTO;
+import name.nicholasgribanov.domain.Category;
 import name.nicholasgribanov.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +31,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDTO getCategoryByName(String name) {
         return categoryMapper.categoryToCategoryDTO(categoryRepository.findByName(name));
+    }
+
+    @Override
+    public CategoryDTO createNewCategory(CategoryDTO categoryDTO) {
+       return saveCategoryDto(categoryMapper.categoryDtoToCategory(categoryDTO));
+    }
+
+    private CategoryDTO saveCategoryDto(Category category) {
+        Category savedCategory = categoryRepository.save(category);
+        return categoryMapper.categoryToCategoryDTO(savedCategory);
+
     }
 }
